@@ -5,12 +5,13 @@ const gameFieldSize = gameField.getBoundingClientRect()
 const playBtn = document.querySelector(".play-btn");
 const replayBtn = document.querySelector(".pop-up_replay-btn");
 const timer = document.querySelector(".timer");
+const popUp = document.querySelector("#jsPopUp");
 
 const NUM_OF_ITEMS = 9;
 const IMG_SIZE = 80;
-;
 
-let countdown
+
+
 let started = undefined;
 let count = 10
 
@@ -27,6 +28,18 @@ const startGame = () => {
     removeAllItems()
     startTimer()
     initGame()
+    showStopBtn()
+}
+
+const stopGame = () => {
+    stopTimer()
+    removeAllItems()
+    showStartBtn()
+}
+
+const replayGame = () => {
+    togglePopUp()
+    startGame()
 }
 
 // placing Items in random position
@@ -75,19 +88,60 @@ const paintText = () => {
     }
 }
 
-const startTimer = () => {
-        setInterval(countdown=()=>{
-                paintText()
-                count--
-        },1000)
+const countdown = () => {
+    paintText()
+    count--
 }
+
+const startTimer = () => {
+        setInterval(countdown,1000)
+}
+
+const stopTimer = () => {
+        clearInterval(countdown);
+        count = 10;
+   
+}
+
+// Change button
+
+const showStopBtn = () => {
+    playBtn.innerHTML = `<i class="fas fa-stop"></i>`
+    playBtn.removeEventListener("click",startGame);
+    playBtn.addEventListener("click", stopGame)
+}
+
+const showStartBtn = () => {
+    playBtn.innerHTML = `<i class="fas fa-play"></i>`
+    playBtn.removeEventListener("click",stopGame);
+    playBtn.addEventListener("click", startGame)
+}
+
+const togglePopUp = () => {
+    popUp.classList.toggle("hidden")
+}
+
+// click Items
+
+const clickItems = (event) => {
+    const targetItem = event.target
+    if(targetItem.className === "carrot") {
+        gameField.removeChild(targetItem)
+    }
+    else if(targetItem.className === "bug") {
+        stopGame()
+        togglePopUp()
+    }
+}
+
 
 
 // Initialize
 
 const init = () => {
     playBtn.addEventListener("click", startGame)
-    replayBtn.addEventListener("click", startGame)
+    replayBtn.addEventListener("click", replayGame)
+    gameField.addEventListener("click", clickItems)
 
 }
 
