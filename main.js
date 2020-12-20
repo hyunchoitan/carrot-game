@@ -7,8 +7,9 @@ const replayBtn = document.querySelector(".pop-up_replay-btn");
 const timer = document.querySelector(".timer");
 const score = document.querySelector(".score")
 const popUp = document.querySelector("#jsPopUp");
+const popUpMessage = document.querySelector(".pop-up_message")
 
-const NUM_OF_ITEMS = 9;
+const NUM_OF_ITEMS = 20;
 const IMG_SIZE = 80;
 const GAME_DURATION_SEC = 10;
 
@@ -34,7 +35,8 @@ const startGame = () => {
     started = !started
 }
 
-const stopGame = () => {
+const stopGame = (text) => {
+    popUpMessage.innerText = text
     stopTimer()
     gameField.innerHTML = ''
     togglePopUp()
@@ -87,6 +89,7 @@ const startTimer = () => {
     countdown = setInterval(()=>{
         if(remainingSec<=0){
             clearInterval(countdown)
+            stopGame("Time Over!")
             return;
         }
         paintTimerText(--remainingSec)
@@ -97,7 +100,7 @@ const stopTimer = () => {
     clearInterval(countdown);
 }
 
-// Change button
+// Show and Hide btn, card, timer and score
 
 const showStopBtn = () => {
     playBtn.style.visibility = "visible"
@@ -116,6 +119,7 @@ const togglePopUp = () => {
 const showTimerAndScore = () => {
     timer.style.visibility = "visible";
     score.style.visibility = "visible";
+    score.innerText = NUM_OF_ITEMS;
 }
 
 const hideStartBtn = () => {
@@ -128,11 +132,21 @@ const clickItems = (event) => {
     const targetItem = event.target
     if(targetItem.className === "carrot") {
         gameField.removeChild(targetItem)
+        changeScore()
     }
     else if(targetItem.className === "bug") {
-        stopGame()
+        stopGame("Try Again?")
     }
 }
+
+const changeScore = () => {
+    const carrots = document.getElementsByClassName("carrot")
+    score.innerText = carrots.length
+    if(carrots.length === 0) {
+        stopGame("Congrats!")
+    }
+}
+
 
 
 
@@ -141,7 +155,7 @@ const clickItems = (event) => {
 const init = () => {
     playBtn.addEventListener("click", ()=>{
         if(started){
-            stopGame()
+            stopGame("play?")
         } else if(!started) {
             startGame()
         }
