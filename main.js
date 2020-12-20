@@ -1,7 +1,6 @@
 'use strict';
 
 const gameField = document.querySelector(".game-field");
-const gameFieldSize = gameField.getBoundingClientRect()
 const playBtn = document.querySelector(".play-btn");
 const replayBtn = document.querySelector(".pop-up_replay-btn");
 const timer = document.querySelector(".timer");
@@ -52,13 +51,15 @@ const replayGame = () => {
 
 // placing Items in random position
 
-const getRandomNumber = (min, max) => {
-    return Math.random()*(max- min- IMG_SIZE);
+const getRandomNumber = (max) => {
+    return Math.random()*(max- IMG_SIZE);
 }
 
 const getRandomPosition = () => {
-    const randomX = Math.floor(getRandomNumber(gameFieldSize.left, gameFieldSize.right))
-    const randomY = Math.floor(getRandomNumber(gameFieldSize.top, gameFieldSize.bottom))
+    const gameFieldWidth = gameField.clientWidth;
+    const gameFieldHeight = gameField.clientHeight;
+    const randomX = Math.floor(getRandomNumber(gameFieldWidth))
+    const randomY = Math.floor(getRandomNumber(gameFieldHeight))
     return [randomX, randomY]
 }
 
