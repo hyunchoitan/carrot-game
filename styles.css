@@ -58,11 +58,13 @@ body {
 .timer {
   padding: 1rem 2rem;
   background-color: white;
+  visibility: hidden;
 }
 
 .score {
   background-color: salmon;
   color: white;
+  visibility: hidden;
 }
 
 .game-field {

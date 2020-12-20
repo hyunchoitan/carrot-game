@@ -5,15 +5,16 @@ const gameFieldSize = gameField.getBoundingClientRect()
 const playBtn = document.querySelector(".play-btn");
 const replayBtn = document.querySelector(".pop-up_replay-btn");
 const timer = document.querySelector(".timer");
+const score = document.querySelector(".score")
 const popUp = document.querySelector("#jsPopUp");
 
 const NUM_OF_ITEMS = 9;
 const IMG_SIZE = 80;
+const GAME_DURATION_SEC = 10;
 
 
-
-let started = undefined;
-let count = 10
+let started = false;
+let countdown = undefined;
 
 
 // Game status
@@ -25,21 +26,26 @@ const initGame = () => {
 }
 
 const startGame = () => {
-    removeAllItems()
+    gameField.innerHTML = '';
     startTimer()
     initGame()
     showStopBtn()
+    showTimerAndScore()
+    started = !started
 }
 
 const stopGame = () => {
     stopTimer()
-    removeAllItems()
-    showStartBtn()
+    gameField.innerHTML = ''
+    togglePopUp()
+    hideStartBtn()
 }
 
 const replayGame = () => {
     togglePopUp()
     startGame()
+    showStopBtn()
+    started = !started
 }
 
 // placing Items in random position
@@ -65,60 +71,55 @@ const placeItem = (className, src) => {
     } 
 }
 
-const removeAllItems = () => {
-    const carrots = document.getElementsByClassName("carrot");
-    const bugs = document.getElementsByClassName("bug");
-    while(carrots.length > 0) {
-        gameField.removeChild(carrots[0])
-    }
-    while(bugs.length > 0) {
-        gameField.removeChild(bugs[0])
-    }
-}
-
 // Timer
 
-const paintText = () => {
-    if(count>=0){
-        const minutes = Math.floor(count/60);
-        const seconds = Math.floor(count%60);
-        const TimerMin = minutes <10 ? `0${minutes}`:minutes
-        const TimerSec = seconds <10 ? `0${seconds}`:seconds
-        return timer.innerText = `${TimerMin}:${TimerSec}`
-    }
-}
-
-const countdown = () => {
-    paintText()
-    count--
+const paintTimerText = (time) => {
+    const minutes = Math.floor(time/60);
+    const seconds = Math.floor(time%60);
+    const TimerMin = minutes <10 ? `0${minutes}`:minutes
+    const TimerSec = seconds <10 ? `0${seconds}`:seconds
+    return timer.innerText = `${TimerMin}:${TimerSec}`
 }
 
 const startTimer = () => {
-        setInterval(countdown,1000)
+    let remainingSec = GAME_DURATION_SEC;
+    paintTimerText(remainingSec)
+    countdown = setInterval(()=>{
+        if(remainingSec<=0){
+            clearInterval(countdown)
+            return;
+        }
+        paintTimerText(--remainingSec)
+    },1000)
 }
 
 const stopTimer = () => {
-        clearInterval(countdown);
-        count = 10;
-   
+    clearInterval(countdown);
 }
 
 // Change button
 
 const showStopBtn = () => {
+    playBtn.style.visibility = "visible"
     playBtn.innerHTML = `<i class="fas fa-stop"></i>`
-    playBtn.removeEventListener("click",startGame);
-    playBtn.addEventListener("click", stopGame)
+
 }
 
 const showStartBtn = () => {
     playBtn.innerHTML = `<i class="fas fa-play"></i>`
-    playBtn.removeEventListener("click",stopGame);
-    playBtn.addEventListener("click", startGame)
 }
 
 const togglePopUp = () => {
     popUp.classList.toggle("hidden")
+}
+
+const showTimerAndScore = () => {
+    timer.style.visibility = "visible";
+    score.style.visibility = "visible";
+}
+
+const hideStartBtn = () => {
+    playBtn.style.visibility = "hidden"
 }
 
 // click Items
@@ -130,7 +131,6 @@ const clickItems = (event) => {
     }
     else if(targetItem.className === "bug") {
         stopGame()
-        togglePopUp()
     }
 }
 
@@ -139,7 +139,13 @@ const clickItems = (event) => {
 // Initialize
 
 const init = () => {
-    playBtn.addEventListener("click", startGame)
+    playBtn.addEventListener("click", ()=>{
+        if(started){
+            stopGame()
+        } else if(!started) {
+            startGame()
+        }
+    })
     replayBtn.addEventListener("click", replayGame)
     gameField.addEventListener("click", clickItems)
 
