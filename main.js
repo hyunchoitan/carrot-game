@@ -8,7 +8,14 @@ const score = document.querySelector(".score")
 const popUp = document.querySelector("#jsPopUp");
 const popUpMessage = document.querySelector(".pop-up_message")
 
-const NUM_OF_ITEMS = 20;
+const bgSound = new Audio("/sound/bg.mp3")
+const bugSound = new Audio("/sound/bug_pull.mp3")
+const carrotSound = new Audio("/sound/carrot_pull.mp3")
+const winSound = new Audio("/sound/game_win.mp3")
+const alertSound = new Audio("/sound/alert.wav")
+
+
+const NUM_OF_ITEMS = 10;
 const IMG_SIZE = 80;
 const GAME_DURATION_SEC = 10;
 
@@ -31,6 +38,7 @@ const startGame = () => {
     initGame()
     showStopBtn()
     showTimerAndScore()
+    playSound(bgSound)
     started = !started
 }
 
@@ -39,6 +47,7 @@ const stopGame = (text) => {
     stopTimer()
     gameField.innerHTML = ''
     togglePopUp()
+    pauseSound(bgSound)
     hideStartBtn()
 }
 
@@ -90,6 +99,7 @@ const startTimer = () => {
     countdown = setInterval(()=>{
         if(remainingSec<=0){
             clearInterval(countdown)
+            playSound(alertSound)
             stopGame("Time Over!")
             return;
         }
@@ -133,10 +143,12 @@ const clickItems = (event) => {
     const targetItem = event.target
     if(targetItem.className === "carrot") {
         gameField.removeChild(targetItem)
+        playSound(carrotSound)
         changeScore()
     }
     else if(targetItem.className === "bug") {
-        stopGame("Try Again?")
+        playSound(bugSound)
+        stopGame("You Lost:(")
     }
 }
 
@@ -144,10 +156,22 @@ const changeScore = () => {
     const carrots = document.getElementsByClassName("carrot")
     score.innerText = carrots.length
     if(carrots.length === 0) {
-        stopGame("Congrats!")
+        playSound(winSound)
+        stopGame("You Won:)")
     }
 }
 
+
+// Audio
+
+const playSound = (audioElement) => {
+    audioElement.play()
+}
+
+const pauseSound = (audioElement) => {
+    audioElement.pause()
+    audioElement.currentTime = 0;
+}
 
 
 
@@ -156,7 +180,8 @@ const changeScore = () => {
 const init = () => {
     playBtn.addEventListener("click", ()=>{
         if(started){
-            stopGame("play?")
+            playSound(alertSound)
+            stopGame("Try Again?")
         } else if(!started) {
             startGame()
         }
