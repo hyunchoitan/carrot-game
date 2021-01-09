@@ -1,6 +1,7 @@
 'use strict';
 
 import Field from "./field.js"
+import * as sound from "./sound.js"
 
 const playBtn = document.querySelector(".play-btn");
 const replayBtn = document.querySelector(".pop-up_replay-btn");
@@ -8,12 +9,6 @@ const timer = document.querySelector(".timer");
 const score = document.querySelector(".score")
 const popUp = document.querySelector("#jsPopUp");
 const popUpMessage = document.querySelector(".pop-up_message")
-
-const bgSound = new Audio("/sound/bg.mp3")
-const bugSound = new Audio("/sound/bug_pull.mp3")
-const carrotSound = new Audio("/sound/carrot_pull.mp3")
-const winSound = new Audio("/sound/game_win.mp3")
-const alertSound = new Audio("/sound/alert.wav")
 
 
 const NUM_OF_ITEMS = 10;
@@ -36,7 +31,7 @@ const startGame = () => {
     gameField.initGame()
     showStopBtn()
     showTimerAndScore()
-    playSound(bgSound)
+    sound.playBg()
     started = !started
 }
 
@@ -45,7 +40,7 @@ const stopGame = (text) => {
     stopTimer()
     gameField.initField()
     togglePopUp()
-    pauseSound(bgSound)
+    sound.pauseBg()
     hideStartBtn()
 }
 
@@ -74,7 +69,7 @@ const startTimer = () => {
     countdown = setInterval(()=>{
         if(remainingSec<=0){
             clearInterval(countdown)
-            playSound(alertSound)
+            sound.playAlert()
             stopGame("Time Over!")
             return;
         }
@@ -116,11 +111,11 @@ const hideStartBtn = () => {
 
 const clickItems = (item) => {
     if(item === "carrot") {
-        playSound(carrotSound)
+        sound.playCarrot()
         changeScore()
     }
     else if(item === "bug") {
-        playSound(bugSound)
+        sound.playBug()
         stopGame("You Lost:(")
     }
 }
@@ -129,23 +124,10 @@ const changeScore = () => {
     const carrots = document.getElementsByClassName("carrot")
     score.innerText = carrots.length
     if(carrots.length === 0) {
-        playSound(winSound)
+        sound.playWin()
         stopGame("You Won:)")
     }
 }
-
-
-// Audio
-
-const playSound = (audioElement) => {
-    audioElement.play()
-}
-
-const pauseSound = (audioElement) => {
-    audioElement.pause()
-    audioElement.currentTime = 0;
-}
-
 
 
 // Initialize
@@ -153,7 +135,7 @@ const pauseSound = (audioElement) => {
 const init = () => {
     playBtn.addEventListener("click", ()=>{
         if(started){
-            playSound(alertSound)
+            sound.playAlert()
             stopGame("Try Again?")
         } else if(!started) {
             startGame()
