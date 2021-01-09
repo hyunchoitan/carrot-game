@@ -1,6 +1,7 @@
 'use strict';
 
-const gameField = document.querySelector(".game-field");
+import Field from "./field.js"
+
 const playBtn = document.querySelector(".play-btn");
 const replayBtn = document.querySelector(".pop-up_replay-btn");
 const timer = document.querySelector(".timer");
@@ -16,7 +17,6 @@ const alertSound = new Audio("/sound/alert.wav")
 
 
 const NUM_OF_ITEMS = 10;
-const IMG_SIZE = 80;
 const GAME_DURATION_SEC = 10;
 
 
@@ -24,18 +24,16 @@ let started = false;
 let countdown = undefined;
 
 
+const gameField = new Field(NUM_OF_ITEMS)
+
+
 // Game status
 
 
-const initGame = () => {
-    placeItem("carrot", "/img/carrot.png")
-    placeItem("bug", "/img/bug.png")
-}
-
 const startGame = () => {
-    gameField.innerHTML = '';
     startTimer()
-    initGame()
+    gameField.initField()
+    gameField.initGame()
     showStopBtn()
     showTimerAndScore()
     playSound(bgSound)
@@ -45,7 +43,7 @@ const startGame = () => {
 const stopGame = (text) => {
     popUpMessage.innerText = text
     stopTimer()
-    gameField.innerHTML = ''
+    gameField.initField()
     togglePopUp()
     pauseSound(bgSound)
     hideStartBtn()
@@ -58,30 +56,7 @@ const replayGame = () => {
     started = !started
 }
 
-// placing Items in random position
 
-const getRandomNumber = (max) => {
-    return Math.random()*(max- IMG_SIZE);
-}
-
-const getRandomPosition = () => {
-    const gameFieldWidth = gameField.clientWidth;
-    const gameFieldHeight = gameField.clientHeight;
-    const randomX = Math.floor(getRandomNumber(gameFieldWidth))
-    const randomY = Math.floor(getRandomNumber(gameFieldHeight))
-    return [randomX, randomY]
-}
-
-const placeItem = (className, src) => {
-    for(let i=0; i<NUM_OF_ITEMS; i++){
-        const img = document.createElement("img")
-        img.setAttribute("class", className)
-        img.setAttribute("src", src)
-        const position = getRandomPosition()
-        img.style.transform = `translate(${position[0]}px,${position[1]}px)`
-        gameField.appendChild(img)
-    } 
-}
 
 // Timer
 
@@ -139,14 +114,12 @@ const hideStartBtn = () => {
 
 // click Items
 
-const clickItems = (event) => {
-    const targetItem = event.target
-    if(targetItem.className === "carrot") {
-        gameField.removeChild(targetItem)
+const clickItems = (item) => {
+    if(item === "carrot") {
         playSound(carrotSound)
         changeScore()
     }
-    else if(targetItem.className === "bug") {
+    else if(item === "bug") {
         playSound(bugSound)
         stopGame("You Lost:(")
     }
@@ -187,7 +160,7 @@ const init = () => {
         }
     })
     replayBtn.addEventListener("click", replayGame)
-    gameField.addEventListener("click", clickItems)
+    gameField.setClickListener(clickItems)
 
 }
 
