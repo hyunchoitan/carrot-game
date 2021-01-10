@@ -3,11 +3,11 @@
 import PopUp from "./popUp.js"
 import Field from "./field.js"
 import Visibility from "./visibility.js"
+import Timer from "./timer.js"
 import * as sound from "./sound.js"
 
 const playBtn = document.querySelector(".play-btn");
 const replayBtn = document.querySelector(".pop-up_replay-btn");
-const timer = document.querySelector(".timer");
 const score = document.querySelector(".score")
 
 const NUM_OF_ITEMS = 10;
@@ -15,19 +15,19 @@ const GAME_DURATION_SEC = 10;
 
 
 let started = false;
-let countdown = undefined;
 
 
 const gameField = new Field(NUM_OF_ITEMS)
 const finishBanner = new PopUp()
 const elements = new Visibility()
-
+const gameTimer = new Timer(GAME_DURATION_SEC)
+gameTimer.setStopGameListener((message)=>stopGame(message))
 
 // Game status
 
 
 const startGame = () => {
-    startTimer()
+    gameTimer.start()
     gameField.initField()
     gameField.initGame()
     elements.showStop()
@@ -38,7 +38,7 @@ const startGame = () => {
 
 const stopGame = (text) => {
     finishBanner.showMessage(text)
-    stopTimer()
+    gameTimer.stop()
     gameField.initField()
     finishBanner.toggle()
     sound.pauseBg()
@@ -52,35 +52,6 @@ const replayGame = () => {
     started = !started
 }
 
-
-
-// Timer
-
-const paintTimerText = (time) => {
-    const minutes = Math.floor(time/60);
-    const seconds = Math.floor(time%60);
-    const TimerMin = minutes <10 ? `0${minutes}`:minutes
-    const TimerSec = seconds <10 ? `0${seconds}`:seconds
-    return timer.innerText = `${TimerMin}:${TimerSec}`
-}
-
-const startTimer = () => {
-    let remainingSec = GAME_DURATION_SEC;
-    paintTimerText(remainingSec)
-    countdown = setInterval(()=>{
-        if(remainingSec<=0){
-            clearInterval(countdown)
-            sound.playAlert()
-            stopGame("Time Over!")
-            return;
-        }
-        paintTimerText(--remainingSec)
-    },1000)
-}
-
-const stopTimer = () => {
-    clearInterval(countdown);
-}
 
 // click Items
 
