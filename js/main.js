@@ -1,5 +1,6 @@
 'use strict';
 
+import PopUp from "./popUp.js"
 import Field from "./field.js"
 import * as sound from "./sound.js"
 
@@ -7,9 +8,6 @@ const playBtn = document.querySelector(".play-btn");
 const replayBtn = document.querySelector(".pop-up_replay-btn");
 const timer = document.querySelector(".timer");
 const score = document.querySelector(".score")
-const popUp = document.querySelector("#jsPopUp");
-const popUpMessage = document.querySelector(".pop-up_message")
-
 
 const NUM_OF_ITEMS = 10;
 const GAME_DURATION_SEC = 10;
@@ -20,6 +18,7 @@ let countdown = undefined;
 
 
 const gameField = new Field(NUM_OF_ITEMS)
+const finishBanner = new PopUp()
 
 
 // Game status
@@ -36,16 +35,16 @@ const startGame = () => {
 }
 
 const stopGame = (text) => {
-    popUpMessage.innerText = text
+    finishBanner.showMessage(text)
     stopTimer()
     gameField.initField()
-    togglePopUp()
+    finishBanner.toggle()
     sound.pauseBg()
     hideStartBtn()
 }
 
 const replayGame = () => {
-    togglePopUp()
+    finishBanner.toggle()
     startGame()
     showStopBtn()
     started = !started
@@ -93,9 +92,6 @@ const showStartBtn = () => {
     playBtn.innerHTML = `<i class="fas fa-play"></i>`
 }
 
-const togglePopUp = () => {
-    popUp.classList.toggle("hidden")
-}
 
 const showTimerAndScore = () => {
     timer.style.visibility = "visible";
