@@ -2,6 +2,7 @@
 
 import PopUp from "./popUp.js"
 import Field from "./field.js"
+import Visibility from "./visibility.js"
 import * as sound from "./sound.js"
 
 const playBtn = document.querySelector(".play-btn");
@@ -19,6 +20,7 @@ let countdown = undefined;
 
 const gameField = new Field(NUM_OF_ITEMS)
 const finishBanner = new PopUp()
+const elements = new Visibility()
 
 
 // Game status
@@ -28,8 +30,8 @@ const startGame = () => {
     startTimer()
     gameField.initField()
     gameField.initGame()
-    showStopBtn()
-    showTimerAndScore()
+    elements.showStop()
+    elements.showTimerAndScore(NUM_OF_ITEMS)
     sound.playBg()
     started = !started
 }
@@ -40,13 +42,13 @@ const stopGame = (text) => {
     gameField.initField()
     finishBanner.toggle()
     sound.pauseBg()
-    hideStartBtn()
+    elements.hideStart()
 }
 
 const replayGame = () => {
     finishBanner.toggle()
     startGame()
-    showStopBtn()
+    elements.showStop()
     started = !started
 }
 
@@ -78,29 +80,6 @@ const startTimer = () => {
 
 const stopTimer = () => {
     clearInterval(countdown);
-}
-
-// Show and Hide btn, card, timer and score
-
-const showStopBtn = () => {
-    playBtn.style.visibility = "visible"
-    playBtn.innerHTML = `<i class="fas fa-stop"></i>`
-
-}
-
-const showStartBtn = () => {
-    playBtn.innerHTML = `<i class="fas fa-play"></i>`
-}
-
-
-const showTimerAndScore = () => {
-    timer.style.visibility = "visible";
-    score.style.visibility = "visible";
-    score.innerText = NUM_OF_ITEMS;
-}
-
-const hideStartBtn = () => {
-    playBtn.style.visibility = "hidden"
 }
 
 // click Items
