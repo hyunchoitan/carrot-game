@@ -1,10 +1,14 @@
 import PopUp from "./popUp.js"
-import Field from "./field.js"
+import {Field, ItemType} from "./field.js"
 import Visibility from "./visibility.js"
 import Timer from "./timer.js"
 import * as sound from "./sound.js"
 
-
+const Reason = Object.freeze({
+    win: "You Won ✨" ,
+    lose: "You Lost 😭",
+    cancel: "Try Again❔",
+})
 //Builder Pattern
 export default class GameBuilder {
     withGameDuration(duration){
@@ -45,7 +49,7 @@ class Game {
         this.playBtn.addEventListener("click", ()=>{
             if(this.started){
                 sound.playAlert()
-                this.stop("Try Again?")
+                this.stop(Reason.cancel)
             } else if(!this.started) {
                 this.start()
             }
@@ -83,22 +87,22 @@ class Game {
 
     
 clickItems = (item) => {
-    if(item === "carrot") {
+    if(item === ItemType.carrot) {
         sound.playCarrot()
         this.changeScore()
     }
-    else if(item === "bug") {
+    else if(item === ItemType.bug) {
         sound.playBug()
-        this.stop("You Lost:(")
+        this.stop(Reason.lose)
     }
 }
 
 changeScore = () => {
-    const carrots = document.getElementsByClassName("carrot")
+    const carrots = document.getElementsByClassName(ItemType.carrot)
     this.score.innerText = carrots.length
     if(carrots.length === 0) {
         sound.playWin()
-        this.stop("You Won:)")
+        this.stop(Reason.win)
     }
 }
 }

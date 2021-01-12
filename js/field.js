@@ -2,7 +2,12 @@
 
 const IMG_SIZE = 80;
 
-export default class Field {
+export const ItemType = Object.freeze({
+    carrot : "carrot",
+    bug : "bug"
+})
+
+export class Field {
     constructor(itemCount) {
         this.itemCount = itemCount;
         this.field = document.querySelector(".game-field");
@@ -15,8 +20,8 @@ export default class Field {
 
 
     initGame () {
-        this._placeItem("carrot", "/img/carrot.png")
-        this._placeItem("bug", "/img/bug.png")
+        this._placeItem(ItemType.carrot, "/img/carrot.png")
+        this._placeItem(ItemType.bug, "/img/bug.png")
     }
 
 // placing Items in random position
@@ -39,12 +44,12 @@ export default class Field {
     
     onClick = (event) => {
         const targetItem = event.target
-        if(targetItem.className === "carrot") {
+        if(targetItem.className === ItemType.carrot) {
             this.field.removeChild(targetItem)
-            this.onItemClick && this.onItemClick("carrot")
+            this.onItemClick && this.onItemClick(ItemType.carrot)
         }
-        else if(targetItem.className === "bug") {
-            this.onItemClick && this.onItemClick("bug")
+        else if(targetItem.className === ItemType.bug) {
+            this.onItemClick && this.onItemClick(ItemType.bug)
         }
     }
 
