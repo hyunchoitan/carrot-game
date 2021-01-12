@@ -5,7 +5,27 @@ import Timer from "./timer.js"
 import * as sound from "./sound.js"
 
 
-export default class Game {
+//Builder Pattern
+export default class GameBuilder {
+    withGameDuration(duration){
+        this.gameDuration = duration;
+        return this;
+    }
+    withItemCounts(num){
+        this.itemCounts = num;
+        return this;
+    }
+    build = () =>{
+        console.log(this);
+        return new Game (
+            this.gameDuration,
+            this.itemCounts
+        )
+    }
+}
+
+
+class Game {
     constructor(gameDuration, itemCounts){
         this.gameDuration = gameDuration;
         this.itemCounts = itemCounts;

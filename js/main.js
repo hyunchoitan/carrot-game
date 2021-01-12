@@ -1,10 +1,7 @@
 'use strict';
 
-import Game from "./game.js"
+import GameBuilder from "./game.js"
 
 
-const NUM_OF_ITEMS = 10;
-const GAME_DURATION_SEC = 10;
-
-const game = new Game(GAME_DURATION_SEC, NUM_OF_ITEMS)
+const game = new GameBuilder().withGameDuration(10).withItemCounts(10).build()
 
