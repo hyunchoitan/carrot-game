@@ -8,7 +8,7 @@ ___
 
 ## Demo Image
 ___
-![Demo Image](FindingCarrots.png)
+![Demo Image](./carrot-demo.png)
 
 ## Technologies
 ___
