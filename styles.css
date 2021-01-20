@@ -8,7 +8,7 @@ body {
 }
 
 body {
-  background-image: url("/img/background.png");
+  background-image: url("https://hyunchoitan.github.io/carrot-game/img/background.png");
   background-position: center;
   background-size: cover;
   display: flex;
