@@ -20,8 +20,8 @@ export class Field {
 
 
     initGame () {
-        this._placeItem(ItemType.carrot, "/img/carrot.png")
-        this._placeItem(ItemType.bug, "/img/bug.png")
+        this._placeItem(ItemType.carrot, "https://hyunchoitan.github.io/carrot-game/img/carrot.png")
+        this._placeItem(ItemType.bug, "https://hyunchoitan.github.io/carrot-game/img/bug.png")
     }
 
 // placing Items in random position
